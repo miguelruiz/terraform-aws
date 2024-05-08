@@ -37,15 +37,14 @@ module "blog_alb" {
   subnets             = module.blog_vpc.public_subnets
   security_groups     = [module.blog_sg.security_group_id]
 
-  listeners = {
-    http_tcp_listener = {
-      port     = 80
-      protocol = "HTTP"
-      forward  = {
-        target_group_arn = module.blog_asg.target_group_arns
-      }
+  target_groups = [
+    {
+      name-prefix = "blog-"
+      backend_protocol = "HTTP"
+      backend_port = 80
+      target_type = "instance"
     }
-  }
+  ]
 
   tags = {
     Environment = "dev"
@@ -72,9 +71,11 @@ module "autoscaling" {
   name = "blog_asg"
   min_size = 1
   max_size = 2
+  
   vpc_zone_identifier = module.blog_vpc.public_subnets
   target_group_arns   = module.blog_alb.target_group_arns
   security_groups     = [module.blog_sg.security_group_id]
+
   image_id            = data.aws_ami.app_ami.id
   instance_type       = "t3.nano"
 }
