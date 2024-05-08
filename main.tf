@@ -83,3 +83,5 @@ module "autoscaling" {
   image_id            = data.aws_ami.app_ami.id
   instance_type       = "t3.nano"
 }
+
+enable_deletion_protection = false
