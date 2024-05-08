@@ -45,6 +45,7 @@ module "blog_alb" {
       redirect = {
         port        = 80
         protocol    = "HTTP"
+        status_code = "HTTP_302"
       }
     }
   }
