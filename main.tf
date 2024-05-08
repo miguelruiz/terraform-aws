@@ -42,19 +42,6 @@ module "alb" {
     http_tcp_listener = {
       port     = 80
       protocol = "HTTP"
-      forward = {
-        target_group_key = "my_target"
-      }
-    }
-  }
-  
-  target_groups = {
-    my_target = {
-      target_id   = aws_instance.blog.id
-      name_prefix = "blog-"
-      protocol    = "HTTP"
-      port        = 80
-      target_type = "instance"
     }
   }
 
@@ -81,7 +68,7 @@ module "autoscaling" {
   source  = "terraform-aws-modules/autoscaling/aws"
   version = "7.4.1"
 
-  name = "blog-asg"
+  name = "blog_asg"
   min_size = 1
   max_size = 2
   vpc_zone_identifier = module.blog_vpc.public_subnets
