@@ -60,7 +60,7 @@ module "blog_sg" {
   source      = "terraform-aws-modules/security-group/aws"
   version     = "5.1.2"
 
-  name                = ${var.environment.name}-blog
+  name                = "${var.environment.name}-blog"
   description         = "Allow http and https in. Allow everything out"
   vpc_id              = module.blog_vpc.vpc_id
   ingress_rules       = ["http-80-tcp","https-443-tcp"]
