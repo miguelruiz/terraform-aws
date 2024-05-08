@@ -30,9 +30,8 @@ module "blog_vpc" {
   } 
 }
 
-module "alb" {
+module "blog_alb" {
   source              = "terraform-aws-modules/alb/aws"
-  name                = "blog_alb"
   load_balancer_type  = "application"
   vpc_id              = module.blog_vpc.vpc_id
   subnets             = module.blog_vpc.public_subnets
@@ -53,7 +52,6 @@ module "alb" {
 module "blog_sg" {
   source      = "terraform-aws-modules/security-group/aws"
   version     = "5.1.2"
-  name        = "blog"
   description = "Allow http and https in. Allow everything out"
   vpc_id      = module.blog_vpc.vpc_id
 
