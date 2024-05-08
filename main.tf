@@ -37,11 +37,9 @@ module "blog_alb" {
   subnets             = module.blog_vpc.public_subnets
   security_groups     = [module.blog_sg.security_group_id]
 
-  listeners = {
-    http_tcp_listener = {
-      port     = 80
-      protocol = "HTTP"
-    }
+  default_action {
+    type = "forward"
+    target_group_arn =  module.blog_alb.target_group_arns
   }
 
   tags = {
