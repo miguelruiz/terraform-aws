@@ -33,6 +33,7 @@ module "blog_alb" {
   source              = "terraform-aws-modules/alb/aws"
 
   load_balancer_type  = "application"
+  enable_deletion_protection = "false"
 
   vpc_id              = module.blog_vpc.vpc_id
   subnets             = module.blog_vpc.public_subnets
@@ -54,8 +55,6 @@ module "blog_alb" {
     Environment = "dev"
   }
 
-  enable_deletion_protection = false
-  
 }
 
 module "blog_sg" {
