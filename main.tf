@@ -38,22 +38,17 @@ module "blog_alb" {
   subnets             = module.blog_vpc.public_subnets
   security_groups     = [module.blog_sg.security_group_id]
 
-  target_groups = [
-    {
-      name_prefix       = "blog-"
-      backend_protocol  = "HTTP"
-      backend_port      = 80
-      target_type       = "instance"
+  listeners = {
+    http_redirect = {
+      port = 80
+      protocol = "HTTP"
+      redirect = {
+        port        = 80
+        protocol    = "HTTP"
+        status_code = "HTTP_200"
+      }
     }
-  ]
-
-  http_tcp_listeners = [
-    {
-      port                = 80
-      protocol            = "HTTP"
-      target_group_index = 0
-    }
-  ]
+  }
 
   tags = {
     Environment = "dev"
@@ -83,6 +78,7 @@ module "autoscaling" {
   
   vpc_zone_identifier = module.blog_vpc.public_subnets
   security_groups     = [module.blog_sg.security_group_id]
+  target_group_arns   = module.blog_alb.target_group_arns
 
   image_id            = data.aws_ami.app_ami.id
   instance_type       = "t3.nano"
