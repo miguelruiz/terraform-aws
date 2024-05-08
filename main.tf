@@ -63,10 +63,11 @@ module "blog_sg" {
   egress_cidr_blocks = ["0.0.0.0/0"]
 }
 
-module "blog_asg" {
+module "autoscaling" {
   source  = "terraform-aws-modules/autoscaling/aws"
   version = "7.4.1"
 
+  name = "blog_asg"
   min_size = 1
   max_size = 2
   vpc_zone_identifier = module.blog_vpc.public_subnets
