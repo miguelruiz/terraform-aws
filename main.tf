@@ -53,12 +53,11 @@ module "blog_sg" {
   source      = "terraform-aws-modules/security-group/aws"
   version     = "5.1.2"
 
+  name = "blog_sg"
   description = "Allow http and https in. Allow everything out"
   vpc_id      = module.blog_vpc.vpc_id
-
   ingress_rules       = ["http-80-tcp","https-443-tcp"]
   ingress_cidr_blocks = ["0.0.0.0/0"]
-
   egress_rules       = ["all-all"]
   egress_cidr_blocks = ["0.0.0.0/0"]
 }
@@ -74,5 +73,4 @@ module "autoscaling" {
   security_groups     = [module.blog_sg.security_group_id]
   image_id            = data.aws_ami.app_ami.id
   instance_type       = "t3.nano"
-
 }
