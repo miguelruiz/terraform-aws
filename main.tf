@@ -20,7 +20,6 @@ module "blog_vpc" {
 
   name = "dev"
   cidr = "10.0.0.0/16"
-
   azs             = ["sa-east-1a","sa-east-1b","sa-east-1c"]
   public_subnets  = ["10.0.101.0/24","10.0.102.0/24","10.0.103.0/24"]
 
@@ -32,6 +31,7 @@ module "blog_vpc" {
 
 module "blog_alb" {
   source              = "terraform-aws-modules/alb/aws"
+
   load_balancer_type  = "application"
   vpc_id              = module.blog_vpc.vpc_id
   subnets             = module.blog_vpc.public_subnets
@@ -52,6 +52,7 @@ module "blog_alb" {
 module "blog_sg" {
   source      = "terraform-aws-modules/security-group/aws"
   version     = "5.1.2"
+
   description = "Allow http and https in. Allow everything out"
   vpc_id      = module.blog_vpc.vpc_id
 
@@ -62,15 +63,13 @@ module "blog_sg" {
   egress_cidr_blocks = ["0.0.0.0/0"]
 }
 
-module "autoscaling" {
+module "blog_asg" {
   source  = "terraform-aws-modules/autoscaling/aws"
   version = "7.4.1"
 
-  name = "blog_asg"
   min_size = 1
   max_size = 2
   vpc_zone_identifier = module.blog_vpc.public_subnets
-  target_group_arns   = module.blog_alb.target_group_arns
   security_groups     = [module.blog_sg.security_group_id]
   image_id            = data.aws_ami.app_ami.id
   instance_type       = "t3.nano"
